@@ -1,0 +1,19 @@
+#email, #password{
+    border: 1px solid transparent;
+}
+
+.input-error{
+    border: 1px solid #a94442!important;
+}
+
+.input-ok{
+    border: 1px solid #3c763d!important;
+}
+
+.glyphicon-user, .glyphicon-lock{
+    top: -3px!important;
+}
+
+.glyphicon-ok, .glyphicon-remove{
+    top: 5px!important;
+}
