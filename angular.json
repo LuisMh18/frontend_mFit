@@ -28,29 +28,10 @@
               "src/assets"
             ],
             "styles": [
-              "src/theme-default.css",
+              "src/assets/css/theme-default.css",
               "src/styles.scss"
             ],
-            "scripts": [
-              "src/app/assets/js/plugins/jquery/jquery.min.js",
-              "src/app/assets/js/plugins/jquery/jquery-ui.min.js",
-              "src/app/assets/js/plugins/bootstrap/bootstrap.min.js",
-              "src/app/assets/js/plugins/icheck/icheck.min.js",
-              "src/app/assets/js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js",
-              "src/app/assets/js/plugins/scrolltotop/scrolltopcontrol.js",
-              "src/app/assets/js/plugins/morris/morris.min.js",
-              "src/app/assets/js/plugins/rickshaw/d3.v3.js",
-              "src/app/assets/js/plugins/rickshaw/rickshaw.min.js",
-              "src/app/assets/js/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js",
-              "src/app/assets/js/plugins/jvectormap/jquery-jvectormap-world-mill-en.js",
-              "src/app/assets/js/plugins/bootstrap/bootstrap-datepicker.js",
-              "src/app/assets/js/plugins/owl/owl.carousel.min.js",
-              "src/app/assets/js/plugins/moment.min.js",
-              "src/app/assets/js/plugins/daterangepicker/daterangepicker.js",
-              "src/app/assets/js/settings.js",
-              "src/app/assets/js/plugins.js",
-              "src/app/assets/js/actions.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {

@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,16 +14,27 @@ import { LoginComponent } from './components/login/login.component';
 
 //rutas
 import { routing, appRoutingProviders } from './app.routing';
+import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
+import { PanelDeControlComponent } from './components/admin/panel-de-control/panel-de-control.component';
+import { ObjetivosComponent } from './components/admin/objetivos/objetivos.component';
+import { RolesComponent } from './components/admin/roles/roles.component';
+import { UsuariosComponent } from './components/admin/usuarios/usuarios.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    DashboardComponent,
+    PanelDeControlComponent,
+    ObjetivosComponent,
+    RolesComponent,
+    UsuariosComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-      routing,
+    HttpModule,
+    routing,
     SimpleNotificationsModule.forRoot(),
     BrowserAnimationsModule,
     FormsModule,

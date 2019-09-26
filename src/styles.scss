@@ -134,11 +134,11 @@
 .page-container.page-navigation-top-fixed .page-content2 {
   padding-top: 50px;
 }
-  
-  
-  
-  
-  
+
+
+
+
+
   .page-container .page-content2 {
     margin-left: 0px;
   }
@@ -241,7 +241,7 @@
     display:none;
   }
 
-  
+
 
 }
 
@@ -308,7 +308,7 @@
 .button_search{
   margin-top: 23px;
   }
-  
+
   .page-content-wrap, .page-container{
       background:#f5f5f5!important;
   }
@@ -318,7 +318,7 @@
 
   /*estilos para los modales*/
   .ui-widget-content {
-     border: 0px!important; 
+     border: 0px!important;
 }
 
 .ui-corner-top {
@@ -590,7 +590,7 @@ p-dataviewlayoutoptions div{
     bottom: 5px!important;
     right: 10px!important;
   }
-  
+
   .x-navigation-client li:nth-child(4){
     bottom: -45px!important;
     right: 20px!important;
@@ -602,7 +602,7 @@ p-dataviewlayoutoptions div{
     right: 5px!important;
     bottom: 1px!important;
   }
-  
+
   .x-navigation-client li:nth-child(4){
     right: 0px!important;
     bottom: 0!important;
@@ -719,6 +719,12 @@ p-dataviewlayoutoptions div{
   flex-wrap: wrap;
 }
 
+
+.profile .profile-controls a .fa, .profile .profile-controls a .glyphicon{
+      line-height: 26px;
+}
+
+
 /*
 .widget.widget-default {
   max-width: 220px!important;
@@ -732,5 +738,32 @@ p-dataviewlayoutoptions div{
   -webkit-box-pack: center;
   -webkit-justify-content: center;
       -ms-flex-pack: center;
-          justify-content: center; 
+          justify-content: center;
 }*/
+
+
+.button-panel-table:hover {
+    border-color: #999;
+    color: #1b1e24;
+}
+
+.button-panel-table {
+    display: block;
+    float: left;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 28px;
+    color: #22262e;
+    border: 1px solid #BBB;
+    border-radius: 20%;
+    margin-left: 3px;
+    -webkit-transition: all 200ms ease;
+    transition: all 200ms ease;
+    background: transparent;
+}
+
+
+.table-striped > tbody > tr td, .table-striped > tbody > tr th {
+    font-size: 13px;
+}

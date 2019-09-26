@@ -1,0 +1,190 @@
+<div class="page-container">
+
+  <!-- PAGE CONTENT -->
+  <div class="page-content">
+      <!-- START BREADCRUMB -->
+      <ul class="breadcrumb push-down-0">
+        <li>
+          <a [routerLink]="['/admin']">Admin</a>
+        </li>
+        <li>
+          <a [routerLink]="['/comercializador']">Catalogos</a>
+        </li>
+        <li class="active">{{titulo}}</li>
+      </ul>
+      <!-- END BREADCRUMB -->
+
+      <!-- PAGE TITLE -->
+      <div class="page-title">
+        <h2>
+          <span class="fa fa-arrow-circle-o-left"></span> {{ titulo }}</h2>
+      </div>
+      <!-- END PAGE TITLE -->
+
+      <!-- PAGE CONTENT WRAPPER -->
+      <div class="page-content-wrap">
+
+          <!-- START RESPONSIVE TABLES -->
+          <div class="row">
+              <div class="col-md-12">
+
+                <div class="panel panel-default "><!-- panel-refreshing -->
+
+                  <div class="panel-heading">
+                    <div class="row">
+                      <div class="col-xs-12 col-sm-10 col-lg-8">
+                        <form #searchForm="ngForm" (ngSubmit)="onSearch()" class="search-data">
+                          <div>
+                            <input type="text" class="form-control" name="search" #search="ngModel" [(ngModel)]="dataForm.search" placeholder="Buscar..."/>
+                          </div>
+                          <div class="input-group">
+                            <span class="input-group-addon">
+                              Orden
+                            </span>
+                            <select class="form-control" name="order" #order="ngModel" [(ngModel)]="dataForm.order">
+                              <option value="desc">Descendente</option>
+                              <option value="asc">Ascendente</option>
+                            </select>
+                          </div>
+                          <div class="input-group">
+                            <span class="input-group-addon">
+                              Estatus
+                            </span>
+                            <select class="form-control" name="status" #status="ngModel" [(ngModel)]="dataForm.status">
+                              <option value="">Todos</option>
+                              <option value="1">Activo</option>
+                              <option value="0">Inactivo</option>
+                            </select>
+                          </div>
+                          <div>
+                            <input type="submit" value="Buscar" class="btn btn-primary input-submit">
+                          </div>
+                        </form>
+                      </div>
+                      <div class="col-xs-12 col-sm-2 col-lg-4">
+                        <ul class="panel-controls">
+                          <li>
+                            <button  class="button-panel-table" data-toggle="modal" data-target="#modal-export-data">
+                              <span class="fas fa-file-export"></span>
+                            </button>
+                          </li>
+                          <li>
+                            <button class="button-panel-table" (click)="refresh()">
+                                 <span class="fa fa-refresh"></span>
+                            </button>
+                          </li>
+                          <li>
+                            <button class="button-panel-table">
+                              <span class="fa fa-plus"></span>
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+
+
+                  </div>
+
+                  <div class="panel-body panel-body-table">
+
+                    <div class="table-responsive">
+                      <table class="table table-bordered table-striped table-actions">
+                        <thead>
+                          <tr>
+                            <th width="50">Id</th>
+                            <th width="100">Descripción</th>
+                            <th width="100">Notas</th>
+                            <th width="50">Estatus</th>
+                            <th width="50">Fecha</th>
+                            <th width="50">Editar</th>
+                            <th width="50">Eliminar</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let data of dataobjetc" class="task-item">
+                            <td>{{ data.id }}</td>
+                            <td>{{ data.descripcion }}</td>
+                            <td>{{ data.notas }}</td>
+                            <td>
+                              <span *ngIf="data.status === 0" class="label label-warning">Inactivo</span>
+                              <span *ngIf="data.status === 1" class="label label-success">Activo</span>
+                            </td>
+                            <td>{{ data.created_at }}</td>
+                            <td>
+                              <button class="btn btn-default btn-rounded btn-sm" (click)="edit(data.id)">
+                                <span class="fa fa-pencil"></span>
+                              </button>
+                            </td>
+                            <td>
+                              <button class="btn btn-danger btn-rounded btn-sm" (click)="delete(data.id, data.descripcion)">
+                                <span class="fa fa-times"></span>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div class="panel-footer panel-footer-pagination">
+                    <div>
+                      Mostrar
+                      <select name="page" class="form-control" [(ngModel)]="numberData" (change)="onChange()">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                        <option value="60">60</option>
+                        <option value="70">70</option>
+                        <option value="80">80</option>
+                        <option value="90">90</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                      </select>
+                      registros
+                    </div>
+                    <div class="dataTables_paginate" >
+                      <a class="paginate_button page-first-child" >
+                        Primero
+                      </a>
+                      <a class="paginate_button" >
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                      <span *ngFor="let page of pages">
+
+                        <a *ngIf="page == currentPage" class="paginate_button current" >{{ page}}</a>
+                        <a *ngIf="page != currentPage" class="paginate_button">{{ page }}</a>
+
+                      </span>
+                      <a class="paginate_button">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                      <a class="paginate_button page-last-child">
+                        Último
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="info-paginacion">
+                    {{ infoPaginacion }}
+                  </div>
+
+                  <div class="panel-refresh-layer2 {{loader}}" ><img src="assets/img/loaders/default.gif" ></div>
+
+
+                </div>
+
+              </div>
+          </div>
+          <!-- END RESPONSIVE TABLES -->
+
+      </div>
+      <!-- END PAGE CONTENT WRAPPER -->
+
+</div>
+<!-- END PAGE CONTENT -->
+
+</div>
