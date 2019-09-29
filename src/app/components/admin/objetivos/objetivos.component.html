@@ -21,6 +21,40 @@
       </div>
       <!-- END PAGE TITLE -->
 
+      <p-dialog header="{{titleForm}}" [(visible)]="display" [modal]="true" [responsive]="true" [minY]="70" styleClass="responsive-modal" (click)="close($event)">
+      <form [formGroup]="form" (ngSubmit)="submit(form.value, btnForm)"  *ngIf="displayForm === 1">
+          <div id="descripcion" class="form-group">
+          <label class="control-label">Descripción:</label>
+          <input type="text" class="form-control" name="descripcion" formControlName="descripcion" [(ngModel)]="objetivos.descripcion" required>
+          <span id="icon_descripcion"></span>
+      </div>
+
+        <div id="notas" class="form-group">
+            <label class="control-label">Comentarios:</label>
+            <textarea type="text" class="form-control" name="notas" formControlName="notas" [(ngModel)]="objetivos.notas" required>></textarea>
+            <span id="icon_notas"></span>
+        </div>
+
+        <div id="div-switch">
+            <label class="control-label">Estatus:</label>
+            <ui-switch [checked]="(statusForm)" color="#1b1e24" (change)="changeStatusForm(statusForm)"></ui-switch>
+        </div>
+
+        <p-footer>
+         <button type="submit" pButton><i class="pi pi-check"></ i> {{btnForm}}</button>
+          <button type="button" pButton (click)="closeModal()"><i class="pi pi-times"></ i>  Cancelar</button>
+        </p-footer>
+      </form>
+
+      <div class="modal-export-data" *ngIf="displayForm === 0" style="padding: 40px 30px;">
+         <button class="btn btn-primary btn-block btn-export" (click)="exportdata(1)">Exportar Todo</button>
+         <button class="btn btn-primary btn-block btn-export" (click)="exportdata(0)">Exportar Filtro</button>
+       </div>
+
+    </p-dialog>
+
+      <p-confirmDialog></p-confirmDialog>
+
       <!-- PAGE CONTENT WRAPPER -->
       <div class="page-content-wrap">
 
@@ -64,7 +98,7 @@
                       <div class="col-xs-12 col-sm-2 col-lg-4">
                         <ul class="panel-controls">
                           <li>
-                            <button  class="button-panel-table" data-toggle="modal" data-target="#modal-export-data">
+                            <button  class="button-panel-table" (click)="exportData()">
                               <span class="fas fa-file-export"></span>
                             </button>
                           </li>
@@ -74,7 +108,7 @@
                             </button>
                           </li>
                           <li>
-                            <button class="button-panel-table">
+                            <button (click)="showDialog()" class="button-panel-table">
                               <span class="fa fa-plus"></span>
                             </button>
                           </li>
@@ -94,7 +128,7 @@
                           <tr>
                             <th width="50">Id</th>
                             <th width="100">Descripción</th>
-                            <th width="100">Notas</th>
+                            <th width="100">Comentarios</th>
                             <th width="50">Estatus</th>
                             <th width="50">Fecha</th>
                             <th width="50">Editar</th>
@@ -117,7 +151,7 @@
                               </button>
                             </td>
                             <td>
-                              <button class="btn btn-danger btn-rounded btn-sm" (click)="delete(data.id, data.descripcion)">
+                              <button class="btn btn-danger btn-rounded btn-sm" (click)="delete(data)">
                                 <span class="fa fa-times"></span>
                               </button>
                             </td>
@@ -147,22 +181,22 @@
                       registros
                     </div>
                     <div class="dataTables_paginate" >
-                      <a class="paginate_button page-first-child" >
+                      <a class="paginate_button page-first-child" (click)="nPage(pageCurrent)">
                         Primero
                       </a>
-                      <a class="paginate_button" >
+                      <a class="paginate_button" (click)="nPage(pagePrev)">
                         <span aria-hidden="true">&laquo;</span>
                       </a>
                       <span *ngFor="let page of pages">
 
-                        <a *ngIf="page == currentPage" class="paginate_button current" >{{ page}}</a>
-                        <a *ngIf="page != currentPage" class="paginate_button">{{ page }}</a>
+                        <a *ngIf="page == currentPage" class="paginate_button current" (click)="nPage(page)">{{ page}}</a>
+                        <a *ngIf="page != currentPage" class="paginate_button" (click)="nPage(page)">{{ page }}</a>
 
                       </span>
-                      <a class="paginate_button">
+                      <a class="paginate_button" (click)="nPage(pNext)">
                         <span aria-hidden="true">&raquo;</span>
                       </a>
-                      <a class="paginate_button page-last-child">
+                      <a class="paginate_button page-last-child" (click)="nPage(pageNext)">
                         Último
                       </a>
                     </div>

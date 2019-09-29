@@ -4,6 +4,11 @@ import { Injectable } from '@angular/core';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { NotificationsService } from 'angular2-notifications';
 
+
+//https://www.npmjs.com/package/angular5-csv
+//import { Angular5Csv } from 'angular5-csv/Angular5-csv';
+import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,6 +28,32 @@ export class CommonService {
   ) { }
 
 
+
+  //exportar
+  exportdata(data, headers, file){
+    //si no ha resultados
+    if(!data.length){
+      this.msj('warn', 'No se encontraron resultados!');
+      return false;
+    }
+
+    var options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      //showTitle: true,
+      useBom: true,
+      /*noDownload: true,*/
+      headers: [headers]
+    };
+
+    let f = new Date();
+    let filename = file+f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear();
+
+    new Angular5Csv(data, filename, options);
+
+  }
 
 
   paginacion(response) {
@@ -115,6 +146,39 @@ token_expired() {
   setInterval(() => {
     window.location.href = '/login';
   }, 2000);
+}
+
+
+//validar formulario
+validateForm(form){
+  for (const field in form.controls) { // 'field' is a string
+    console.log("field:" + field);
+    const control = form.get(field); // 'control' is a FormControl
+    console.log(form.get(field));//
+    console.log("control: "+control);
+    let form_group = document.getElementById(field);
+    let form_icon = document.getElementById("icon_"+field);
+    if(control.status == 'INVALID'){
+
+      form_group.className = "form-group has-feedback has-error";
+      form_icon.className = "glyphicon glyphicon-remove form-control-feedback";
+
+      if(control.errors.required){
+        this.msj('error', `El campo ${field} es requerido.`);
+      }
+
+      if(control.errors.minlength){
+        this.msj('error', `El campo ${field} debe de tener al menos 3 caracteres.`);
+      }
+      if(control.errors.email){
+        this.msj('error', `El formato del ${field} es inválido.`);
+      }
+    } else {
+      form_group.className = "form-group has-feedback has-success";
+      form_icon.className = "glyphicon glyphicon-ok form-control-feedback";
+    }
+
+  }
 }
 
 

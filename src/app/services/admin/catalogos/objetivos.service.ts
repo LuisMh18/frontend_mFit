@@ -41,6 +41,7 @@ export class ObjetivosService {
 
   add(token, data):Observable<any>{
     let params = JSON.stringify(data);
+    console.log("params: ", params);
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
 

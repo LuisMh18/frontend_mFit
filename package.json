@@ -20,12 +20,16 @@
     "@angular/platform-browser-dynamic": "~8.2.7",
     "@angular/router": "~8.2.7",
     "angular2-notifications": "^2.0.0",
+    "angular5-csv": "^0.2.11",
+    "ngx-ui-switch": "1.6.0",
+    "primeicons": "^2.0.0",
+    "primeng": "^8.0.3",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.803.5",
+    "@angular-devkit/build-angular": "^0.803.6",
     "@angular/cli": "~8.3.5",
     "@angular/compiler-cli": "~8.2.7",
     "@angular/http": "^7.2.15",

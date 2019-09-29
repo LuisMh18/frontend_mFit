@@ -4,8 +4,10 @@ import { CommonService } from '../../../services/common/common.service';
 
 import { ObjetivosService } from '../../../services/admin/catalogos/objetivos.service';
 
+import {ConfirmationService} from 'primeng/api';
+
 //forms
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-objetivos',
@@ -29,8 +31,15 @@ export class ObjetivosComponent implements OnInit {
   currentPage;
   loader;
   page;
-  statusForm;
   dataForm;
+
+  //formulario
+  objetivos;
+  statusForm;
+  titleForm;
+  btnForm;
+  form: FormGroup;
+  displayForm;
 
   export;
   constructor(
@@ -38,17 +47,28 @@ export class ObjetivosComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     private _objetivosService: ObjetivosService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private confirmationService: ConfirmationService,
   ) {
     this.titulo = "Objetivos";
   }
 
+  //dialog
+  display: boolean = false
+
   ngOnInit() {
     this.token = localStorage.getItem('token');
 
+    this.objetivos = {
+     id:"",
+     descripcion:"",
+     notas:"",
+     status:0
+    }
+
     this.page = null;//para el numero de pagina de la paginacion
     this.numberData = 10; //select para seleccionar el numero de registros de ver por pagina
-    this.statusForm = false; //estatus del formulario
+    this.statusForm = false; //status del formulario
     this.export = false;
     this.loader = '';
 
@@ -58,6 +78,27 @@ export class ObjetivosComponent implements OnInit {
       status:"",
       per_page: this.numberData ,
     }
+
+
+    //reglas de validacion
+    this.form = this.formBuilder.group({
+      descripcion: [
+        '',
+       [
+          Validators.required,
+          Validators.minLength(3)
+      ]
+      ],
+      notas: [
+        '',
+       [
+          Validators.required,
+          Validators.minLength(0)
+      ]
+      ]
+
+    });
+
 
     this.getData(this.token, this.page, this.dataForm);
 
@@ -86,7 +127,7 @@ export class ObjetivosComponent implements OnInit {
           this.currentPage = this.paginacion[0].currentPage;
           this.loader = 'hidden';
         } else {
-          //this.confirmexportdata(response.data.data);
+          this.confirmexportdata(response.data.data);
         }
 
       }, error => {
@@ -103,12 +144,21 @@ export class ObjetivosComponent implements OnInit {
   }
 
 
+  nPage(page) {
+    if (page != 'null') {
+      this.loader = '';
+      this.page = page;
+      this.getData(this.token, page, this.dataForm);
+    }
+
+  }
+
   //Mostrar numero de paginas
   onChange() {
     this.loader = '';
     console.log(this.numberData);
     this.dataForm.per_page = this.numberData;
-    this.getData(this.token, this.page, this.dataForm);
+    this.getData(this.token, this.page = null, this.dataForm);
   }
 
 
@@ -125,6 +175,272 @@ export class ObjetivosComponent implements OnInit {
     }
     this.getData(this.token, this.page, this.dataForm);
 
+  }
+
+  //limpiar formulario
+  onResetForm(){
+    console.log("Limpiar formulario");
+    this.form.reset();
+    this.statusForm = false;
+  }
+
+  //export
+  exportData(){
+    this.displayForm = 0;
+    this.onResetForm();
+    this.display = true;
+    this.titleForm = "Exportar";
+  }
+
+
+getAll(token) {
+  this._objetivosService.getAll(token).subscribe(
+    response => {
+      this._commonService.exportdata(response.data, ["Id", "Descripción", "Comentarios", "Estatus", "Fecha"], "Objetivo_");
+    }, error => {
+      if (error.statusText == 'Unauthorized') {
+        this._commonService.token_expired();
+      } else {
+        console.log('Error 500');
+        console.log(<any>error);
+        this._commonService.msj('error', 'Erro interno del servidor');
+      }
+    }
+  );
+
+}
+
+exportdata(d){
+  if(d === 1){
+    this.getAll(this.token);
+  } else {
+    this.confirmexportdata(undefined);
+  }
+  this.display = false;
+}
+
+
+
+confirmexportdata(data){
+  if(data === undefined){
+    this.export = true;
+    this.getData(this.token, this.page, this.dataForm);
+  } else {
+    this._commonService.exportdata(data, ["Id", "Descripción", "Comentarios", "Estatus", "Fecha"], "Objetivo_");
+    this.export = false;
+  }
+
+
+}
+
+  //modal add new
+  showDialog(){
+    this.displayForm = 1;
+    this.statusForm = false;
+    this.display = true;
+    this.titleForm = "Agregar Objetivo";
+    this.btnForm = "Agregar";
+  }
+
+  //cerrar modal
+
+  close(event){
+    if(this.displayForm == 0){
+      return false;
+    }
+    console.log(event.target);
+    if (event.target.className === "pi pi-times") {
+      this.clearForm();
+      this.closeModal();
+    }
+}
+
+  closeModal(){
+    this.onResetForm();
+    this.clearForm();
+    this.display = false;
+  }
+
+  //limpiamos los msjs de error oh de success
+  clearForm(){
+    for (const field in this.form.controls) { // 'field' is a string
+      let form_group = document.getElementById(field);
+      let form_icon = document.getElementById("icon_"+field);
+      form_group.className = "form-group";
+      form_icon.className = "";
+    }
+  }
+
+  //cambiar status
+  changeStatusForm(status){
+    console.log(status);
+    this.statusForm = !status;
+    console.log(this.statusForm);
+  }
+
+
+  //add and update
+  submit(formValue: any, action){
+    console.log("action: ", action);
+    if(action === 'Agregar'){
+      this.add(formValue);
+    } else {
+      this.update(formValue);
+    }
+
+  }
+
+  //add
+  add(formValue){
+    this.objetivos = {
+      descripcion:formValue.descripcion,
+      notas:formValue.notas,
+      status:(this.statusForm == true) ? 1 : 0,
+    }
+    console.log("data: ", this.objetivos);
+    this.validate();
+
+    //si es valido
+    if(this.form.valid) {
+      this._objetivosService.add(this.token, this.objetivos).subscribe(
+        response => {
+          if (response.error == 'validate') {
+            let data = Object.values(response.errors);
+            for (let err of data) {
+              this._commonService.msj('error', `<div class="font_notif">${err[0]}</div>`);
+            }
+
+          } else if (response.error.statusText == 'Unauthorized') {
+            this._commonService.token_expired();
+          } else {
+            this.closeModal();
+            this.getData(this.token, this.page, this.dataForm);
+            this._commonService.msj('success', response.message);
+          }
+
+        }, error => {
+          console.log(<any>error);
+        }
+      );
+
+
+
+    }
+
+  }
+
+
+  //edit
+  edit(id) {
+    this.displayForm = 1;
+    this.display = true;
+    this.titleForm = "Editar Objetivo";;
+    this.btnForm = "Actualizar";
+
+    this._objetivosService.edit(this.token, id).subscribe(
+      response => {
+        this.objetivos = {
+           id:response.data.id,
+           descripcion:response.data.descripcion,
+           notas:response.data.notas,
+           status:response.data.status
+        }
+
+        this.statusForm = (response.data.status === 1) ? true : false;
+
+      }, error => {
+        if(error.statusText == 'Unauthorized'){
+          this._commonService.token_expired();
+        } else {
+          console.log(<any>error);
+        }
+      }
+    );
+  }
+
+  update(formValue){
+
+    this.objetivos = {
+       id:this.objetivos.id,
+       descripcion:formValue.descripcion,
+       notas:formValue.notas,
+       status:(this.statusForm === true) ? 1 : 0
+    }
+    this.validate();
+
+    if(this.form.valid) {
+      this._objetivosService.update(this.token, this.objetivos).subscribe(
+        response => {
+          if (response.error == 'validate') {
+            let data = Object.values(response.errors);
+            for (let err of data) {
+              this._commonService.msj('error', `<div class="font_notif">${err[0]}</div>`);
+            }
+
+          } else if (response.error == true){
+            this._commonService.msj('warn', response.message);
+          } else if (response.error.statusText == 'Unauthorized') {
+            this._commonService.token_expired();
+          } else {
+            this.closeModal();
+            this.getData(this.token, this.page, this.dataForm);
+            this._commonService.msj('success', response.message);
+          }
+
+        }, error => {
+          console.log(<any>error);
+        }
+      );
+
+
+
+    }
+
+  }
+
+
+  //Eliminar
+delete(object){
+  console.log(object);
+  this.confirmationService.confirm({
+    message: '¿Estás seguro de eliminar el objetivo ' +object.descripcion+' ?',
+    header: 'Eliminar Objetivo',
+    icon: 'pi pi-info-circle',
+    accept: () => {
+        this.confirmdelete(object.id);
+    },
+    reject: () => {
+        console.log("no");
+    }
+  });
+}
+
+
+confirmdelete(id){
+    this._objetivosService.delete(this.token, id).subscribe(
+      response => {
+        this._commonService.msj('success', response.message);
+        this.getData(this.token, this.page, this.dataForm);
+      }, error => {
+        if (error.statusText == 'Unauthorized') {
+          this._commonService.token_expired();
+        } else {
+          console.log('Error 500');
+         console.log(<any>error);
+         this._commonService.msj('error', 'Erro interno del servidor');
+       /* setInterval(() => {
+          location.reload();
+        }, 1000); */
+
+        }
+      }
+    );
+
+}
+
+  //validar formulario
+  validate(){
+    this._commonService.validateForm(this.form);
   }
 
 

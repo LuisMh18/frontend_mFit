@@ -11,6 +11,15 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './components/login/login.component';
 
+//primeng ----
+import {DialogModule} from 'primeng/dialog';
+import {InputSwitchModule} from 'primeng/inputswitch';
+
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ConfirmationService} from 'primeng/api';
+
+//https://www.npmjs.com/package/ngx-ui-switch
+import { UiSwitchModule } from 'ngx-ui-switch';
 
 //rutas
 import { routing, appRoutingProviders } from './app.routing';
@@ -38,10 +47,16 @@ import { UsuariosComponent } from './components/admin/usuarios/usuarios.componen
     SimpleNotificationsModule.forRoot(),
     BrowserAnimationsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DialogModule,
+    InputSwitchModule,
+    UiSwitchModule,
+    ConfirmDialogModule
+
   ],
   providers: [
-      appRoutingProviders
+      appRoutingProviders,
+      ConfirmationService
   ],
   bootstrap: [AppComponent]
 })
