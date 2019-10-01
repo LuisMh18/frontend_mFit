@@ -22,16 +22,16 @@
       <!-- END PAGE TITLE -->
 
       <p-dialog header="{{titleForm}}" [(visible)]="display" [modal]="true" [responsive]="true" [minY]="70" styleClass="responsive-modal" (click)="close($event)">
-      <form [formGroup]="form" (ngSubmit)="submit(form.value, btnForm)"  *ngIf="displayForm === 1">
+      <form (ngSubmit)="submit(objetivos, btnForm)"  *ngIf="displayForm === 1">
           <div id="descripcion" class="form-group">
           <label class="control-label">Descripción:</label>
-          <input type="text" class="form-control" name="descripcion" formControlName="descripcion" [(ngModel)]="objetivos.descripcion" required>
+          <input type="text" class="form-control" name="descripcion" [(ngModel)]="objetivos.descripcion" required>
           <span id="icon_descripcion"></span>
       </div>
 
         <div id="notas" class="form-group">
             <label class="control-label">Comentarios:</label>
-            <textarea type="text" class="form-control" name="notas" formControlName="notas" [(ngModel)]="objetivos.notas" required>></textarea>
+            <textarea type="text" class="form-control" name="notas" [(ngModel)]="objetivos.notas" required>></textarea>
             <span id="icon_notas"></span>
         </div>
 
@@ -41,8 +41,8 @@
         </div>
 
         <p-footer>
-         <button type="submit" pButton><i class="pi pi-check"></ i> {{btnForm}}</button>
-          <button type="button" pButton (click)="closeModal()"><i class="pi pi-times"></ i>  Cancelar</button>
+         <button type="submit" pButton><i class="pi pi-check"></i> {{btnForm}}</button>
+          <button type="button" pButton (click)="closeModal()"><i class="pi pi-times"></i>  Cancelar</button>
         </p-footer>
       </form>
 

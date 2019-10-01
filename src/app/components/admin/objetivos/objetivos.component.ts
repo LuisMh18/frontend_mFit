@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
 import { CommonService } from '../../../services/common/common.service';
 
 import { ObjetivosService } from '../../../services/admin/catalogos/objetivos.service';
@@ -7,7 +6,7 @@ import { ObjetivosService } from '../../../services/admin/catalogos/objetivos.se
 import {ConfirmationService} from 'primeng/api';
 
 //forms
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+//import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-objetivos',
@@ -38,16 +37,14 @@ export class ObjetivosComponent implements OnInit {
   statusForm;
   titleForm;
   btnForm;
-  form: FormGroup;
+  //form: FormGroup;
   displayForm;
 
   export;
   constructor(
     private _commonService: CommonService,
-    private _route: ActivatedRoute,
-    private _router: Router,
     private _objetivosService: ObjetivosService,
-    private formBuilder: FormBuilder,
+    //private formBuilder: FormBuilder,
     private confirmationService: ConfirmationService,
   ) {
     this.titulo = "Objetivos";
@@ -81,28 +78,20 @@ export class ObjetivosComponent implements OnInit {
 
 
     //reglas de validacion
-    this.form = this.formBuilder.group({
-      descripcion: [
-        '',
-       [
-          Validators.required,
-          Validators.minLength(3)
-      ]
-      ],
-      notas: [
-        '',
-       [
-          Validators.required,
-          Validators.minLength(0)
-      ]
-      ]
-
-    });
+    /*this.form = this.formBuilder.group();*/
 
 
     this.getData(this.token, this.page, this.dataForm);
 
   }//end ngOnInit
+
+
+  //validar espacios en blanco
+ /* noWhitespaceValidator(control: FormControl) {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { 'whitespace': true };
+  }*/
 
 
  //buscar ---
@@ -180,7 +169,13 @@ export class ObjetivosComponent implements OnInit {
   //limpiar formulario
   onResetForm(){
     console.log("Limpiar formulario");
-    this.form.reset();
+    //this.form.reset();
+    this.objetivos = {
+      id:"",
+      descripcion:"",
+      notas:"",
+      status:0
+     }
     this.statusForm = false;
   }
 
@@ -243,7 +238,6 @@ confirmexportdata(data){
   }
 
   //cerrar modal
-
   close(event){
     if(this.displayForm == 0){
       return false;
@@ -263,12 +257,8 @@ confirmexportdata(data){
 
   //limpiamos los msjs de error oh de success
   clearForm(){
-    for (const field in this.form.controls) { // 'field' is a string
-      let form_group = document.getElementById(field);
-      let form_icon = document.getElementById("icon_"+field);
-      form_group.className = "form-group";
-      form_icon.className = "";
-    }
+    document.getElementById("descripcion").className = "form-group";
+    document.getElementById("icon_descripcion").className = "";
   }
 
   //cambiar status
@@ -298,16 +288,20 @@ confirmexportdata(data){
       status:(this.statusForm == true) ? 1 : 0,
     }
     console.log("data: ", this.objetivos);
-    this.validate();
+    //this.validate();
 
     //si es valido
-    if(this.form.valid) {
+    //if(this.form.valid) {
       this._objetivosService.add(this.token, this.objetivos).subscribe(
         response => {
           if (response.error == 'validate') {
             let data = Object.values(response.errors);
+            var i = 0;
             for (let err of data) {
               this._commonService.msj('error', `<div class="font_notif">${err[0]}</div>`);
+              document.getElementById(response.field[i]).className = "form-group has-feedback has-error";
+              document.getElementById(`icon_${response.field[i]}`).className = "glyphicon glyphicon-remove form-control-feedback";
+              i++;
             }
 
           } else if (response.error.statusText == 'Unauthorized') {
@@ -325,7 +319,7 @@ confirmexportdata(data){
 
 
 
-    }
+    //}
 
   }
 
@@ -366,15 +360,19 @@ confirmexportdata(data){
        notas:formValue.notas,
        status:(this.statusForm === true) ? 1 : 0
     }
-    this.validate();
+    //this.validate();
 
-    if(this.form.valid) {
+    //if(this.form.valid) {
       this._objetivosService.update(this.token, this.objetivos).subscribe(
         response => {
           if (response.error == 'validate') {
             let data = Object.values(response.errors);
+            var i = 0;
             for (let err of data) {
               this._commonService.msj('error', `<div class="font_notif">${err[0]}</div>`);
+              document.getElementById(response.field[i]).className = "form-group has-feedback has-error";
+              document.getElementById(`icon_${response.field[i]}`).className = "glyphicon glyphicon-remove form-control-feedback";
+              i++;
             }
 
           } else if (response.error == true){
@@ -394,7 +392,7 @@ confirmexportdata(data){
 
 
 
-    }
+    //}
 
   }
 
@@ -439,9 +437,9 @@ confirmdelete(id){
 }
 
   //validar formulario
-  validate(){
+  /*validate(){
     this._commonService.validateForm(this.form);
-  }
+  }*/
 
 
 }//end class
