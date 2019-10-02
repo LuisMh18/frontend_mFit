@@ -51,7 +51,7 @@ export class ObjetivosComponent implements OnInit {
   }
 
   //dialog
-  display: boolean = false
+  display: boolean = false;
 
   ngOnInit() {
     this.token = localStorage.getItem('token');

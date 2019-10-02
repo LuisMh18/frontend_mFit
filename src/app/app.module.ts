@@ -18,6 +18,8 @@ import {InputSwitchModule} from 'primeng/inputswitch';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
 
+import {TabViewModule} from 'primeng/tabview';
+
 //https://www.npmjs.com/package/ngx-ui-switch
 import { UiSwitchModule } from 'ngx-ui-switch';
 
@@ -51,7 +53,8 @@ import { UsuariosComponent } from './components/admin/usuarios/usuarios.componen
     DialogModule,
     InputSwitchModule,
     UiSwitchModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    TabViewModule
 
   ],
   providers: [
